@@ -2,27 +2,27 @@
 // Free PHP File Directory Listing Script - Version 1.5
 // HalGatewood.com
 
-// THINGS TO CHANGE: 
-
+// THINGS TO CHANGE:
+// Derp
 	// TITLE OF PAGE
 	$title = "List of Files";
 
 	// ADD SPECIFIC FILES YOU WANT TO IGNORE HERE
 	$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store" );
-	
+
 	// ADD SPECIFIC FILE EXTENSIONS YOU WANT TO IGNORE HERE, EXAMPLE: array('psd','jpg','jpeg')
 	$ignore_ext_list = array( );
-	
+
 	// SORT BY
 	$sort_by = "name_asc"; // options: name_asc, name_desc, date_asc, date_desc
-	
+
 	// ICON URL
 	$icon_url = "https://dl.dropbox.com/u/6771946/icons/icons.png";
-	
+
 	// TOGGLE SUB FOLDERS, SET TO false IF YOU WANT OFF
 	$toggle_sub_folders = true;
-	
-	
+
+
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 ?>
@@ -47,15 +47,15 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 		.block .date { margin-top: 4px; font-size: 70%; color: #666; }
 		.block a { display: block; padding: 10px 15px; transition: all 0.35s; }
 		.block a:hover { text-decoration: none; background: #efefef; }
-		
-		.jpg, .jpeg, .gif, .png { background-position: -50px 0 !important; } 
-		.pdf { background-position: -100px 0 !important; }  
+
+		.jpg, .jpeg, .gif, .png { background-position: -50px 0 !important; }
+		.pdf { background-position: -100px 0 !important; }
 		.txt, .rtf { background-position: -150px 0 !important; }
-		.xls, .xlsx { background-position: -200px 0 !important; } 
-		.ppt, .pptx { background-position: -250px 0 !important; } 
+		.xls, .xlsx { background-position: -200px 0 !important; }
+		.ppt, .pptx { background-position: -250px 0 !important; }
 		.doc, .docx { background-position: -300px 0 !important; }
 		.zip, .rar, .tar, .gzip { background-position: -350px 0 !important; }
-		.swf { background-position: -400px 0 !important; } 
+		.swf { background-position: -400px 0 !important; }
 		.fla { background-position: -450px 0 !important; }
 		.mp3 { background-position: -500px 0 !important; }
 		.wav { background-position: -550px 0 !important; }
@@ -67,9 +67,9 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 		.ai { background-position: -850px 0 !important; }
 		.html, .xhtml, .dhtml, .php, .asp, .css, .js, .inc { background-position: -900px 0 !important; }
 		.dir { background-position: -950px 0 !important; }
-		
+
 		.sub { margin-left: 20px; border-left: solid 1px #ECE9E9; display: none; }
-		
+
 	</style>
 </head>
 <body>
@@ -83,12 +83,12 @@ function cleanTitle($title)
 	return ucwords( str_replace( array("-", "_"), " ", $title) );
 }
 
-function getFileExt($filename) 
+function getFileExt($filename)
 {
 	return substr( strrchr( $filename,'.' ),1 );
 }
 
-function format_size($file) 
+function format_size($file)
 {
 	$bytes = filesize($file);
 	if ($bytes < 1024) return $bytes.'b';
@@ -103,12 +103,12 @@ function format_size($file)
 function display_block( $file )
 {
 	global $ignore_file_list, $ignore_ext_list;
-	
+
 	$file_ext = getFileExt($file);
 	if( !$file_ext AND is_dir($file)) { $file_ext = "dir"; }
 	if(in_array($file, $ignore_file_list)) { return; }
 	if(in_array($file_ext, $ignore_ext_list)) { return; }
-	
+
 	echo "<div class=\"block\">";
 	echo "<a href=\"$file\" class=\"$file_ext\">";
 	echo "	<div class=\"img $file_ext\">&nbsp;</div>";
@@ -128,42 +128,42 @@ function build_blocks( $items, $folder )
 	$objects = array();
 	$objects['directories'] = array();
 	$objects['files'] = array();
-	
+
 	foreach($items as $c => $item)
 	{
 		if( $item == ".." OR $item == ".") continue;
-	
+
 		// IGNORE FILE
 		if(in_array($item, $ignore_file_list)) { continue; }
-	
+
 		if( $folder )
 		{
 			$item = "$folder/$item";
 		}
 
 		$file_ext = getFileExt($item);
-		
+
 		// IGNORE EXT
 		if(in_array($file_ext, $ignore_ext_list)) { continue; }
-		
+
 		// DIRECTORIES
-		if( is_dir($item) ) 
+		if( is_dir($item) )
 		{
-			$objects['directories'][] = $item; 
+			$objects['directories'][] = $item;
 			continue;
 		}
-		
+
 		// FILE DATE
 		$file_time = date("U", filemtime($item));
-		
+
 		// FILES
 		$objects['files'][$file_time . "-" . $item] = $item;
 	}
-	
+
 	foreach($objects['directories'] as $c => $file)
 	{
 		display_block( $file );
-		
+
 		if($toggle_sub_folders)
 		{
 			$sub_items = (array) scandir( $file );
@@ -175,13 +175,13 @@ function build_blocks( $items, $folder )
 			}
 		}
 	}
-	
+
 	// SORT BEFORE LOOP
 	if( $sort_by == "date_asc" ) { ksort($objects['files']); }
 	elseif( $sort_by == "date_desc" ) { krsort($objects['files']); }
 	elseif( $sort_by == "name_asc" ) { natsort($objects['files']); }
 	elseif( $sort_by == "name_desc" ) { arsort($objects['files']); }
-	
+
 	foreach($objects['files'] as $t => $file)
 	{
 		$fileExt = getFileExt($file);
@@ -198,7 +198,7 @@ build_blocks( $items, false );
 
 <?php if($toggle_sub_folders) { ?>
 <script>
-	$(document).ready(function() 
+	$(document).ready(function()
 	{
 		$("a.dir").click(function(e)
 		{
@@ -206,7 +206,7 @@ build_blocks( $items, false );
 			console.log( $(this).attr('href') );
 			e.preventDefault();
 		});
-	
+
 	});
 </script>
 <?php } ?>
